@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voting Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f4f4f4; /* Light gray background color */
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-center">Voting Results</h1>
+    <div class="container" style="background-color: #fff; padding: 20px; border-radius: 10px;">
+        <div class="row">
+            <div class="col-lg-6">
+                <canvas id="votingChart" width="400" height="200"></canvas>
+            </div>
+            <div class="col-lg-6">
+                <ul>
+                    {% for choice in choices %}
+                        <li>
+                            {{ choice.choice_text }} - Votes: {{ choice.votes }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const choices = [{% for choice in choices %} "{{ choice.choice_text }}", {% endfor %}];
+        const votes = [{% for choice in choices %} {{ choice.votes }}, {% endfor %}];
+
+        const backgroundColor = [
+            'rgba(255, 99, 132, 0.6)', // Red
+            'rgba(54, 162, 235, 0.6)', // Blue
+            'rgba(255, 206, 86, 0.6)', // Yellow
+            'rgba(75, 192, 192, 0.6)', // Green
+            'rgba(153, 102, 255, 0.6)', // Purple
+        ];
+
+        const borderColor = [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+        ];
+
+        const ctx = document.getElementById('votingChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: choices,
+                datasets: [{
+                    label: 'Votes',
+                    data: votes,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    }
+                }
+            }
+        });
+    </script>
+    <di>
+        <p><a href="{% url 'polls:index' %}">Home</a></p>
+        <hr>
+        <p><a href="{% url 'polls:vote' %}">Vote</a></p>
+    </di>
+</body>
+</html>
